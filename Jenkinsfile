@@ -40,13 +40,13 @@ pipeline {
                     sh '''
                     cd 3.00-starting-project 
 
-                    docker build -t 34.123.150.92:8083/springapp:${VERSION} .
+                    docker build -t 34.123.150.92:8087/springapp:${VERSION} .
                     
-                    docker login -u admin -p $nexus_creds 34.123.150.92:8083
+                    docker login -u admin -p $nexus_creds 34.123.150.92:8087
 
-                    docker push 34.123.150.92:8083/springapp:${VERSION} 
+                    docker push 34.123.150.92:8087/springapp:${VERSION} 
 
-                    docker rmi 34.123.150.92:8083/springapp:${VERSION}
+                    docker rmi 34.123.150.92:8087/springapp:${VERSION}
 
                     '''
                     }
