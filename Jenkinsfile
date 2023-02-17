@@ -57,13 +57,13 @@ pipeline {
     }
     post {
         always {
-            slackSend color: "#00FFFF", message: "Project : ${env.JOB_NAME} | Build Number : ${env.BUILD.NUMBER}" 
+            slackSend color: "#00FFFF", message: "Project : ${env.JOB_NAME} | Build Number : ${env.BUILD_NUMBER}" 
         }
         success {
-            slackSend color: "good", message: "Everything is working great ===>  Project : ${env.JOB_NAME} | Build Number : ${env.BUILD.NUMBER}" 
+            slackSend color: "good", message: "Everything is working great ===>  Project : ${env.JOB_NAME} | Build Number : ${env.BUILD_NUMBER}" 
         }
         failure {
-            slackSend color: "danger", message: "The build has failed ===>  Project : ${env.JOB_NAME} | Build Number : ${env.BUILD.NUMBER}" 
+            slackSend color: "danger", message: "The build has failed ===>  Project : ${env.JOB_NAME} | Build Number : ${env.BUILD_NUMBER}" 
         }
     }
 }
