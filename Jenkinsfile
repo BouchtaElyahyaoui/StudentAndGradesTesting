@@ -91,7 +91,7 @@ pipeline {
             dir('3.00-starting-project/kubernetes/') {    
                 sh 'ls -ltr'
                 sh 'pwd'
-                sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${version}" myjavaapp myapp/ '
+                sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ '
                 step([$class: 'KubernetesEngineBuilder', \
                   projectId: env.PROJECT_ID, \
                   clusterName: env.CLUSTER_NAME, \
