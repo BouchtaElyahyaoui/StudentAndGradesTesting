@@ -3,6 +3,10 @@ pipeline {
     agent any
     environment {
         VERSION = "${env.BUILD_ID}"
+        PROJECT_ID = 'protean-bit-376817'
+        CLUSTER_NAME = 'jenkins'
+        LOCATION = 'us-central1-a'
+        CREDENTIALS_ID = 'protean-bit-376817'
     }
 
     stages{
@@ -81,6 +85,24 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to K8s') {
+            steps{
+                echo "Deployment started ..."
+            dir('3.00-starting-project/kubernetes/') {    
+                sh 'ls -ltr'
+                sh 'pwd'
+                sh 'helm upgrade --install -set image.repository="34.123.150.92:8087/springapp" --set image.tag="${version} myjavaapp myapp/ '
+                step([$class: 'KubernetesEngineBuilder', \
+                  projectId: env.PROJECT_ID, \
+                  clusterName: env.CLUSTER_NAME, \
+                  location: env.LOCATION, \
+                  manifestPattern: 'deployment.yaml', \
+                  credentialsId: env.CREDENTIALS_ID, \
+                  verifyDeployments: true])
+                }
+            }
+            }
+        }  
 
 
     }
