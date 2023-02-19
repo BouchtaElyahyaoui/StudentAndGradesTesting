@@ -89,15 +89,16 @@ pipeline {
             steps{
                 echo "Deployment started ..."
             dir('3.00-starting-project/kubernetes/') {    
-                step([$class: 'KubernetesEngineBuilder', \
-                  projectId: env.PROJECT_ID, \
-                  clusterName: env.CLUSTER_NAME, \
-                  location: env.LOCATION, \
-                  credentialsId: env.CREDENTIALS_ID, \
-                  chart: 'myapp/', \
-                  releaseName: 'myjavaapp', \
-                  values: '--set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}"', \
-                  verifyDeployments: true])
+               KubernetesEngineBuilder(
+                  projectId: env.PROJECT_ID, 
+                  clusterName: env.CLUSTER_NAME, 
+                  location: env.LOCATION, 
+                  credentialsId: env.CREDENTIALS_ID, 
+                  chart: 'myapp/Chart.yaml', 
+                  yamlFiles: 'myapp/values.yaml'
+                  releaseName: 'myjavaapp', 
+                  values: '--set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}"' 
+                  )
                 }
             }
             }
