@@ -97,6 +97,7 @@ pipeline {
             }
             }        
     }
+    }
     post {
         always {
             slackSend color: "#00FFFF", message: "Project : ${env.JOB_NAME} | Build Number : ${env.BUILD_NUMBER}" 
