@@ -89,7 +89,8 @@ pipeline {
             steps{
                 echo "Deployment started ..."
             dir('3.00-starting-project/kubernetes/') {    
-                withCredentials([file(credentialsId: 'gke-cluster-credentials', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                withCredentials([[credentialsId: 'gke-cluster-credentials', variable: 'GOOGLE_APPLICATION_CREDENTIALS']]) 
+                {
                 sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/.kube/config'
             }
             }
