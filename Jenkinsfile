@@ -87,6 +87,9 @@ pipeline {
         }
         stage('Deploy to K8s') {
             steps{
+                script {
+
+                
                 echo "Deployment started ..."                
                def KubernetesEngineBuilder = [
                 $class: 'KubernetesEngineBuilder', 
@@ -109,6 +112,7 @@ pipeline {
             }
                   }
                 
+            }
             }
     }
     }
