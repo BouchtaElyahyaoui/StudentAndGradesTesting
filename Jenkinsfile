@@ -6,7 +6,7 @@ pipeline {
         PROJECT_ID = 'protean-bit-376817'
         CLUSTER_NAME = 'cluster-1'
         LOCATION = 'us-central1-c'
-        CREDENTIALS_ID = 'protean-bit-376817'
+        CREDENTIALS_ID = 'gke-cluster-credentials'
     }
 
     stages{
@@ -87,22 +87,29 @@ pipeline {
         }
         stage('Deploy to K8s') {
             steps{
-                echo "Deployment started ..."
-            dir('3.00-starting-project/kubernetes/') {    
-                sh 'ls -ltr'
-                sh 'pwd'
-                sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/.kube/config'
-                step([$class: 'KubernetesEngineBuilder', \
-                  projectId: env.PROJECT_ID, \
-                  clusterName: env.CLUSTER_NAME, \
-                  location: env.LOCATION, \
-                  manifestPattern: 'deployment.yaml', \
-                  credentialsId: env.CREDENTIALS_ID, \
-                  verifyDeployments: true])
-                }
+                echo "Deployment started ..."                
+               def KubernetesEngineBuilder = [
+                $class: 'KubernetesEngineBuilder', 
+                  projectId: env.PROJECT_ID, 
+                  clusterName: env.CLUSTER_NAME, 
+                  location: env.LOCATION, 
+                  credentialsId: env.CREDENTIALS_ID, 
+                  serviceAccountKey: credentials('${env.CREDENTIALS_ID}'),
+                  verifyDeployments: true,
+                  manifestExpansion: true,
+                  verifySSL: true,
+                  useProxy: false,
+                  allowLabelOverwrite: true,
+                  ]
+
+                  KubernetesEngineBuilder.withKubernetes {
+            dir('3.00-starting-project/kubernetes/') { 
+            sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/.kube/config'
+
             }
+                  }
+                
             }
-        
     }
     post {
         always {
