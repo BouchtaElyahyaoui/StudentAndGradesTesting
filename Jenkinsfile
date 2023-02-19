@@ -95,8 +95,7 @@ pipeline {
                 sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/kconfig'
             }
             }
-
-        
+            }        
     }
     post {
         always {
