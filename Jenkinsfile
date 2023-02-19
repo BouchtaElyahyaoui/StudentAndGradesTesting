@@ -95,7 +95,7 @@ pipeline {
                   location: env.LOCATION, 
                   credentialsId: env.CREDENTIALS_ID, 
                   chart: 'myapp/Chart.yaml', 
-                  yamlFiles: 'myapp/values.yaml'
+                  yamlFiles: 'myapp/values.yaml',
                   releaseName: 'myjavaapp', 
                   values: '--set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}"' 
                   )
