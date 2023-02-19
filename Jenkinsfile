@@ -88,7 +88,7 @@ pipeline {
         stage('Configure GKE') {
             steps {
                 sh '''
-                gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone ${env.LOCATION} --project ${env.PROJECT_ID}
+                gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone ${LOCATION} --project ${PROJECT_ID}
                 '''
             }
     }
