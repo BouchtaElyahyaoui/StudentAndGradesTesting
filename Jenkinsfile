@@ -4,7 +4,7 @@ pipeline {
     environment {
         VERSION = "${env.BUILD_ID}"
         PROJECT_ID = 'protean-bit-376817'
-        CLUSTER_NAME = 'cluster-1'
+        CLUSTER_NAME = 'jenkins'
         LOCATION = 'us-central1-a'
         CREDENTIALS_ID = 'protean-bit-376817'
     }
@@ -89,19 +89,13 @@ pipeline {
             steps{
                 echo "Deployment started ..."
             dir('3.00-starting-project/kubernetes/') {    
-               KubernetesEngineBuilder(
-                  projectId: env.PROJECT_ID, 
-                  clusterName: env.CLUSTER_NAME, 
-                  location: env.LOCATION, 
-                  credentialsId: env.CREDENTIALS_ID, 
-                  chart: 'myapp/Chart.yaml', 
-                  yamlFiles: 'myapp/values.yaml',
-                  releaseName: 'myjavaapp', 
-                  values: '--set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}"' 
-                  )
-                }
+                sh 'ls -ltr'
+                sh 'pwd'
+                withCredentials([file(credentialsId: 'protean-bit-376817', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/kconfig'
             }
             }
+
         
     }
     post {
