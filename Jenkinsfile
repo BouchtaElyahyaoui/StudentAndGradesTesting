@@ -85,24 +85,24 @@ pipeline {
                 }
             }
         }
-        stage('Configure GKE') {
-            steps {
-                sh '''
-                gcloud container clusters get-credentials "${CLUSTER_NAME}" --zone "${LOCATION}" --project "${PROJECT_ID}"
-                '''
-            }
-    }
         stage('Deploy to K8s') {
             steps{
                 echo "Deployment started ..."
             dir('3.00-starting-project/kubernetes/') {    
-                withCredentials([file(credentialsId: 'gke-cluster-credentials', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) 
-                {
-                sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/.kube/config'
+                sh 'ls -ltr'
+                sh 'pwd'
+                sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/kconfig'
+                step([$class: 'KubernetesEngineBuilder', \
+                  projectId: env.PROJECT_ID, \
+                  clusterName: env.CLUSTER_NAME, \
+                  location: env.LOCATION, \
+                  manifestPattern: 'deployment.yaml', \
+                  credentialsId: env.CREDENTIALS_ID, \
+                  verifyDeployments: true])
+                }
             }
             }
-            }        
-    }
+        
     }
     post {
         always {
