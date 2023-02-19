@@ -4,8 +4,8 @@ pipeline {
     environment {
         VERSION = "${env.BUILD_ID}"
         PROJECT_ID = 'protean-bit-376817'
-        CLUSTER_NAME = 'jenkins'
-        LOCATION = 'us-central1-a'
+        CLUSTER_NAME = 'cluster-1'
+        LOCATION = 'us-central1-c'
         CREDENTIALS_ID = 'protean-bit-376817'
     }
 
@@ -85,11 +85,18 @@ pipeline {
                 }
             }
         }
+        stage('Configure GKE') {
+            steps {
+                sh '''
+                gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone ${env.LOCATION} --project ${env.PROJECT_ID}
+                '''
+            }
+    }
         stage('Deploy to K8s') {
             steps{
                 echo "Deployment started ..."
             dir('3.00-starting-project/kubernetes/') {    
-                withCredentials([[credentialsId: 'gke-cluster-credentials', variable: 'GOOGLE_APPLICATION_CREDENTIALS']]) 
+                withCredentials([file(credentialsId: 'gke-cluster-credentials', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) 
                 {
                 sh 'helm upgrade --install --set image.repository="34.123.150.92:8087/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ --kubeconfig /home/bouchta/.kube/config'
             }
